@@ -34,7 +34,7 @@
             <tag name="monolog.logger" channel="opensky.graphite.statsd" />
         </service>
         
-        <service id="opensky.graphite.connection.null" class="OpenSky\Bundle\GraphiteBundle\Connection\NullConnection" public="false" />
+        <service id="opensky.graphite.connection.noop" class="OpenSky\Bundle\GraphiteBundle\Connection\NoopConnection" public="false" />
         
         <service id="opensky.graphite.connection" alias="opensky.graphite.connection.udp" />
         <service id="opensky.graphite.statsd.connection" alias="opensky.graphite.statsd.connection.udp" />

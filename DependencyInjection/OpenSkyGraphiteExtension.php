@@ -37,11 +37,11 @@ class OpenSkyGraphiteExtension extends Extension
             case 'logging':
                 $container->setAlias('opensky.graphite.connection', 'opensky.graphite.connection.logging');
                 break;
-            case 'null':
-                $container->setAlias('opensky.graphite.connection', 'opensky.graphite.connection.null');
+            case 'noop':
+                $container->setAlias('opensky.graphite.connection', 'opensky.graphite.connection.noop');
                 break;
             default:
-                throw new InvalidConfigurationException(sprintf('graphite.conneciton must be (udp|logging|null) "%s" provided', $graphiteConnection));
+                throw new InvalidConfigurationException(sprintf('graphite.conneciton must be (udp|logging|noop) "%s" provided', $graphiteConnection));
                 break;
         }
 
@@ -64,11 +64,11 @@ class OpenSkyGraphiteExtension extends Extension
             case 'logging':
                 $container->setAlias('opensky.graphite.statsd.connection', 'opensky.graphite.statsd.connection.logging');
                 break;
-            case 'null':
-                $container->setAlias('opensky.graphite.statsd.connection', 'opensky.graphite.connection.null');
+            case 'noop':
+                $container->setAlias('opensky.graphite.statsd.connection', 'opensky.graphite.connection.noop');
                 break;
             default:
-                throw new InvalidConfigurationException(sprintf('graphite.statsd.conneciton must be (udp|logging|null) "%s" provided', $statsdConnection));
+                throw new InvalidConfigurationException(sprintf('graphite.statsd.conneciton must be (udp|logging|noop) "%s" provided', $statsdConnection));
                 break;
         }
     }

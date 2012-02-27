@@ -45,12 +45,12 @@ GraphiteBundle allows you to log using either a udp connection, the symfony logg
 # app/config/config.yml
 
 opensky_graphite:
-    connection: udp # (null|udp|logging) defaults to null
+    connection: udp # (noop|udp|logging) defaults to udp
     host: 127.0.0.1 # required for a udp connection
     port: 2003 # optional - defaults to 2003
     prefix: 'foo.' # optional - helps organize the data on your graphite server, automatically fills in statsd.prefix
     statsd:
-        conenction: udp # (null|udp|logging) defaults to null
+        conenction: udp # (noop|udp|logging) defaults to udp
         host: 127.0.0.1 # required for a udp connection
         port: 8125 # defaults to 8125
         prefix: 'foo.' # optional - defaults to the graphite prefix

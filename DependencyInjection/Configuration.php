@@ -17,13 +17,13 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->scalarNode('connection')->defaultValue('udp')->treatNullLike('null')->cannotBeEmpty()->end()
+                ->scalarNode('connection')->defaultValue('udp')->treatNullLike('noop')->cannotBeEmpty()->end()
                 ->scalarNode('host')->defaultNull()->end()
                 ->scalarNode('port')->defaultValue(2003)->end()
                 ->scalarNode('prefix')->defaultValue('')->end()
                 ->arrayNode('statsd')
                     ->children()
-                        ->scalarNode('connection')->defaultValue('udp')->treatNullLike('null')->cannotBeEmpty()->end()
+                        ->scalarNode('connection')->defaultValue('udp')->treatNullLike('noop')->cannotBeEmpty()->end()
                         ->scalarNode('host')->defaultNull()->end()
                         ->scalarNode('port')->defaultValue(8125)->end()
                         ->scalarNode('prefix')->defaultValue('')->end()

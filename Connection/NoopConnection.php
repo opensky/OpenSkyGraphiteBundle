@@ -4,7 +4,7 @@ namespace OpenSky\Bundle\GraphiteBundle\Connection;
 
 use OpenSky\Bundle\GraphiteBundle\Connection;
 
-class NullConnection implements Connection
+class NoopConnection implements Connection
 {
     public function write($data)
     {
