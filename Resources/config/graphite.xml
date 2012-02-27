@@ -1,0 +1,66 @@
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <parameters>
+        <parameter key="opensky.graphite.statsd.host"></parameter>
+        <parameter key="opensky.graphite.statsd.port">8125</parameter>
+        <parameter key="opensky.graphite.statsd.prefix">%opensky.graphite.prefix%</parameter>
+        <parameter key="opensky.graphite.host"></parameter>
+        <parameter key="opensky.graphite.port">2003</parameter>
+        <parameter key="opensky.graphite.prefix"></parameter>
+        <parameter key="opensky.graphite.listener.class">OpenSky\Bundle\GraphiteBundle\Listener\GraphiteListener</parameter>
+        <parameter key="opensky.connection_cleanup.listener.class">OpenSky\Bundle\GraphiteBundle\Listener\ConnectionCleanupListener</parameter>
+        <parameter key="opensky.graphite.logger.class">OpenSky\Bundle\GraphiteBundle\GraphiteLogger</parameter>
+        <parameter key="opensky.graphite.statsd.logger.class">OpenSky\Bundle\GraphiteBundle\StatsDLogger</parameter>
+        <parameter key="opensky.graphite.event_dispatcher.class">OpenSky\Bundle\GraphiteBundle\Event\GraphiteEventDispatcher</parameter>
+    </parameters>
+    <services>
+        <!-- Connections -->
+        <service id="opensky.graphite.connection.udp" class="OpenSky\Bundle\GraphiteBundle\Connection\UdpConnection" public="false">
+            <argument>%opensky.graphite.host%</argument>
+            <argument>%opensky.graphite.port%</argument>
+        </service>
+        <service id="opensky.graphite.statsd.connection.udp" class="OpenSky\Bundle\GraphiteBundle\Connection\UdpConnection" public="false">
+            <argument>%opensky.graphite.statsd.host%</argument>
+            <argument>%opensky.graphite.statsd.port%</argument>
+        </service>        
+
+        <service id="opensky.graphite.connection.logging" class="OpenSky\Bundle\GraphiteBundle\Connection\LoggingConnection" public="false">
+            <argument id="logger" type="service" />
+            <tag name="monolog.logger" channel="graphite" />
+        </service>
+        <service id="opensky.graphite.statsd.connection.logging" class="OpenSky\Bundle\GraphiteBundle\Connection\LoggingConnection" public="false">
+            <argument id="logger" type="service" />
+            <tag name="monolog.logger" channel="opensky.graphite.statsd" />
+        </service>
+        
+        <service id="opensky.graphite.connection.null" class="OpenSky\Bundle\GraphiteBundle\Connection\NullConnection" public="false" />
+        
+        <service id="opensky.graphite.connection" alias="opensky.graphite.connection.udp" />
+        <service id="opensky.graphite.statsd.connection" alias="opensky.graphite.statsd.connection.udp" />
+        
+        <!-- Loggers -->
+        <service id="opensky.graphite.logger" class="%opensky.graphite.logger.class%">
+            <argument id="opensky.graphite.connection" type="service" />
+            <argument>%opensky.graphite.prefix%</argument>
+        </service>
+        <service id="opensky.graphite.statsd.logger" class="%opensky.graphite.statsd.logger.class%" >
+            <argument id="opensky.graphite.statsd.connection" type="service" />
+            <argument>%opensky.graphite.statsd.prefix%</argument>       
+        </service>
+        
+        <service id="opensky.graphite.listener" class="%opensky.graphite.listener.class%" scope="request">
+            <tag name="kernel.event_listener" event="kernel.response" method="onKernelResponse" priority="-1000" />
+            <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController" priority="1000" />
+            <tag name="kernel.event_listener" event="kernel.exception" method="onKernelException" priority="1000" />
+            <argument id="opensky.graphite.statsd.logger" type="service" />
+            <argument type="service" id="kernel" />
+        </service>
+
+        <service id="opensky.connection_cleanup.listener" class="%opensky.connection_cleanup.listener.class%">
+            <tag name="kernel.event_listener" event="kernel.response" method="onKernelResponse" priority="-1001" />
+            <argument id="opensky.graphite.statsd.logger" type="service" />
+            <argument id="opensky.graphite.logger" type="service" />
+        </service>
+    </services>
+</container>
