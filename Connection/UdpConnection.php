@@ -37,7 +37,7 @@ class UdpConnection implements Connection
     {
         if ($this->handle !== null) {
             fclose($this->handle);
-            unset($this->handle);
+            $this->handle = null;
         }
     }
 }
